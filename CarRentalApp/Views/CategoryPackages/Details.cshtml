@@ -1,0 +1,66 @@
+﻿@model CarRentalApp.Models.CategoryPackage
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>CategoryPackage</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CarModel.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CarModel.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RentalItems.ImageUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RentalItems.ImageUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.catergoryId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.catergoryId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MileagePerDay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MileagePerDay)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsUnlimited)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsUnlimited)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.rate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.rate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.packageId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

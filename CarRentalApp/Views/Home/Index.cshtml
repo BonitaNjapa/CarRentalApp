@@ -1,0 +1,173 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img style="max-width:100%;max-height:100%;height:660px" class="d-block w-100" src="~/HomeCars/3.jpg" alt="First slide">
+            <div class="carousel-caption">
+                <h2 style="font-family:Constantia">Car Rentals</h2>
+                <p style="font-size:18px">Looking for a car to rent?</p>
+                <p>
+                    <a href="/customer-rentals" class="btn btn-outline-light">Make a Booking</a>
+                </p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img style="max-width:100%;max-height:100%;height:660px" class="d-block w-100" src="~/HomeCars/4.jpg" alt="Second slide">
+            <div class="carousel-caption">
+                <h2 style="font-family:Constantia">Car Rentals</h2>
+                <p style="font-size:18px">Looking for a car to rent?</p>
+                <p>
+                    <a href="/customer-rentals" class="btn btn-outline-light">Make a Booking</a>
+                </p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img style="max-width:100%;max-height:100%;height:660px" class="d-block w-100" src="~/HomeCars/2.jpg" alt="Third slide">
+            <div class="carousel-caption">
+                <h2 style="font-family:Constantia">Car Rentals</h2>
+                <p style="font-size:18px">Looking for a car to rent?</p>
+                <p>
+                    <a href="/customer-rentals" class="btn btn-outline-light">Make a Booking</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+<br />
+<section class="intro main-content" id="rental">
+    <div class="container">
+        <h2 class="text-center">Car Rentals</h2>
+        <br>
+        <div class="row">
+            <!--Item 1-->
+            <div class="col-md-4">
+                <div class="card">
+                    <img class="card-img-top" src="~/HomeCars/3.jpg" alt="Card image cap">
+                    <div class="card-body">
+                        <h3 class="card-title"><b>Low rental rates</b></h3>
+                        <p class="card-text">Working with over 900 companies...</p>
+                        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#FirstModal">
+                            Read more
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!--Item 2-->
+            <div class="col-md-4">
+                <div class="card">
+                    <img class="card-img-top" src="~/HomeCars/4.jpg" alt="Card image cap">
+                    <div class="card-body">
+                        <h3 class="card-title"><b>24/7 customer service</b></h3>
+                        <p class="card-text">Our reservations center is...</p>
+                        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#SecondModal">
+                            Read more
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!--Item 3-->
+            <div class="col-md-4">
+                <div class="card">
+                    <img class="card-img-top" src="~/HomeCars/2.jpg" alt="Card image cap">
+                    <div class="card-body">
+                        <h3 class="card-title"><b>Manage your booking</b></h3>
+                        <p class="card-text">Cancel or amend your car...</p>
+                        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#ThirdModal">
+                            Read more
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<br />
+
+<!-- The Modal -->
+<div class="modal" id="FirstModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Low rental rates</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Working with over 900 companies in 160 countries, we can find the right car in the right place, at the right price.
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div class="modal" id="SecondModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">24/7 customer service</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Our reservations center is open 24 hours a day, seven days a week. Call us at 0800 983 468 or make a reservation online.
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="ThirdModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Manage your booking</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Cancel or amend your car or dates online quickly and easly.
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,193 @@
+﻿@model IEnumerable<CarRentalApp.Models.Driver>
+@using CarRentalApp.Models
+
+
+<div class="container">
+    <br />
+    <div class="row">
+        @Html.Hidden("id")
+        <div class="col-sm-4">
+            @if (ViewBag.VehicleModel != null)
+            {
+                @Html.Partial("_VehicleDetails", (CarRentalApp.Models.RentalItems)ViewBag.VehicleModel)
+            }
+
+        </div>
+        <div class="col-md-8">
+            <h3>Add Driver</h3><br />
+            @if (Model.Count() < 1)
+            {
+                <p>
+                    <h2 style="color:lightgray">No additional adrivers added..</h2>
+                    <br />
+                    <a href="@(Url.Action("AddDriverAction",new { id = Guid.Parse(TempData["bookingId"].ToString())}))" class="btn btn-outline-dark">Add Driver</a> &nbsp;&nbsp; <a class="btn btn-outline-dark" href="@(Url.Action("Summary",new { id = Guid.Parse(TempData["bookingId"].ToString())}))">Skip and Continue &gt;&gt;</a>
+                </p>
+            }
+            else
+            {
+                <a href="@(Url.Action("AddDriverAction",new { id = Guid.Parse(TempData["bookingId"].ToString())}))" class="btn btn-outline-dark">Add Another Driver</a> <text>&nbsp;&nbsp;</text>  <a class="btn btn-outline-dark" href="@(Url.Action("Summary",new { id = Guid.Parse(TempData["bookingId"].ToString())}))">Continue &gt;&gt;</a><br /><br />
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Surname)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PhoneNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LicenceNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IDcopy)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LicenceCopy)
+                        </th>
+
+
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Surname)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PhoneNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LicenceNumber)
+                            </td>
+                            <td>
+                                <a href="@Url.Content($"~/Docs/{item.IDcopy}")"><span style="color:indianred" class="fa fa-file-pdf-o"></span></a>
+                            </td>
+                            <td>
+                                <a href="@Url.Content($"~/Docs/{item.LicenceCopy}")"><span style="color:indianred" class="fa fa-file-pdf-o"></span></a>
+                            </td>
+
+                            <td>
+                                <a href="#" onclick="deleteItem('@(item.Id)')"><span style="color:indianred" class="fa fa-trash"></span></a>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+
+            @if (TempData["Show"] != null)
+            {
+                using (Html.BeginForm("AddDriverAction", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("id")
+                    <div class="form-horizontal">
+                        <h4>Driver Details</h4>
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.Label("First Name")
+
+                            <input type="text" name="FirstName" class="form-control" required />
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Last Name")
+
+                            <input type="text" name="Surname" class="form-control" required />
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Email")
+
+                            <input type="email" name="Email" class="form-control" required />
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Phone Number")
+
+                            <input type="tel" name="PhoneNumber" class="form-control" required />
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Identity Number")
+
+                            <input type="text" name="IdNumber" class="form-control" required />
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Licence Number")
+
+                            <input type="text" name="LicenceNumber" class="form-control" required />
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Id Copy")
+
+                            <input type="file" name="fileIdCopy" required="required" />
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Licence Copy")
+
+                            <input type="file" name="fileLicenseCopy" required="required" />
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <input type="submit" value="Save" class="btn btn-outline-dark" />
+
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<script>
+     function deleteItem(id) {
+        var doDelete = confirm("Are you sure you want to remove this category?");
+        if (doDelete) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("Delete")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    return;
+                }
+            });
+        }
+    }
+</script>

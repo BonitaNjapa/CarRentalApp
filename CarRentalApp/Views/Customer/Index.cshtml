@@ -1,0 +1,66 @@
+﻿@model IEnumerable<CarRentalApp.Models.RentalItems>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="container">
+    <br />
+    <div class="container">
+        @using (Html.BeginForm())
+        {
+            <h4>Search by category:</h4>
+            <div class="input-group mb-3">
+                @Html.DropDownList("id", (SelectList)ViewBag.AllCategories, "All Category", new { @class = "form-control" })
+                <div class="input-group-append">
+                    <button class="btn btn-outline-dark" type="submit">Search</button>
+                </div>
+            </div>
+        }
+        <hr />
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <br />
+                <div class="col-sm-4">
+                    <h3>
+                        @(item.CarModel.Name)
+                    </h3><br />
+                    <h4>
+                        @(item.GroupingClassName)
+                    </h4>
+                    <img src="~/Images/@item.ImageUrl" style="width:250px;height:250px" alt="user image" class="online" /><br />
+                    @(item.Seats) Seats | @(item.Doors) Doors<br />
+                    <b><span class="fa fa-check"></span>  Air Condition</b><br />
+                    <b><span class="fa fa-check"></span>  @(item.ManualOrAutomatic)</b><br />
+                    <span class="fa fa-"></span>Tank Capacity:<b>  @(item.TankCapacity) L</b><br />
+                    @*Mileage: <b>@(item.IsUnlimited == false ? $"{item.MileagePerDay} Per km per day" : "Unlimited")</b><br />*@
+                    Price per day: <b>ZAR @(item.CarModel.Rate)</b><br /><br />
+                    @if (item.IsBookable)
+                    {
+                        if (item.IsAvailable == true)
+                        {
+                            <p>
+                                <a class="btn btn-outline-dark btn-block" href="@(Url.Action("Bookings", new { id = item.Id }))">Make Booking</a>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                <a class="btn btn-outline-info btn-block">Still Booked</a>
+                            </p>
+                        }
+                    }
+                    else
+                    {
+                        <p>
+                            <a class="btn btn-outline-warning btn-block">Not Availabe Undergoing Maintainance</a>
+                        </p>
+                    }
+                </div>
+                <br />
+
+            }
+        </div>
+    </div>
+    <br />
+</div>

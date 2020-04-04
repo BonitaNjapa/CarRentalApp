@@ -1,0 +1,207 @@
+﻿@model IEnumerable<CarRentalApp.Models.Bookings>
+
+@{
+    ViewBag.Title = "MyBookings";
+}
+<div class="container">
+    <br />
+    @if (User.IsInRole("Admin") || User.IsInRole("Clerk"))
+    {
+        <h2>Bookings</h2>
+        using (Html.BeginForm())
+        {
+            <hr />
+            <h4>Search by Name, Surname or Ref:</h4>
+            <div class="input-group mb-3">
+                @Html.TextBox("Firstname", "", "", new { @class = "form-control", placeholder = "Search.." })
+                <div class="input-group-append">
+                    <button class="btn btn-outline-dark" type="submit">Search</button>
+                </div>
+            </div>
+            @*<div class="wrap">
+                @Html.Partial("_Stats")
+            </div>*@
+        }
+    }
+    else
+        if (User.IsInRole("Customer"))
+    {
+        <h2>My Bookings</h2>
+    }
+    <table class="table table-hover table-striped">
+        @if (Model.Count() > 0)
+        {
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Reference)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RentalItems.VehicleMake)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.RentalItems.CModel)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.PickUpDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DropOffDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PickUpTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DropOffTime)
+            </th>
+            <th>
+                @Html.Label("Status")
+            </th>
+            <th>
+            </th>
+            <th>
+            </th>
+        </tr>
+            foreach (var item in Model)
+            {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reference)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RentalItems.VehicleMake)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.RentalItems.CModel)
+            </td>*@
+            <td>
+                @(item.PickUpDate.ToShortDateString())
+            </td>
+            <td>
+                @(item.DropOffDate.ToShortDateString())
+            </td>
+            <td>
+                @(item.PickUpTime.ToShortTimeString())
+            </td>
+            <td>
+                @(item.DropOffTime.ToShortTimeString())
+            </td>
+            @if (item.IsActive)
+            {
+                <td>
+                    <a class="btn btn-outline-success" href="#">Active</a>
+                </td>
+                <td>
+                    <a class="btn btn-outline-danger" href="" onclick="Cancel('@(item.Id)')">Cancel</a>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <a class="btn btn-outline-info" href="#">Cancelled</a>
+                </td>
+            }
+            @if (User.IsInRole("Admin") || User.IsInRole("Clerk"))
+            {
+                <td>
+                    @if (item.IsActive)
+                    {
+                        if (item.IsCheckedOut == false)
+                        {
+                            <a class="btn btn-outline-secondary" onclick="" href="@(Url.Action("Print", "Customer", new { Id = item.Id }))">Checkout</a>
+                        }
+                        else if (item.IsCheckedOut == true)
+                        {
+                            <a class="btn btn-outline-success" href="@(Url.Action("Print", "Customer", new { Id = item.Id }))">CheckIn</a>
+                            <a class="btn btn-outline-success" href="@(Url.Action("Damages", "Customer", new { Id = item.Id }))">Damaged</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-info" href="#">Car Returned</a>
+                        }
+
+                    }
+                </td>
+            }
+        </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">
+                    <h1>No Bookings Available.</h1>
+                </td>
+            </tr>
+        }
+    </table>
+    <br />
+</div>
+<script>
+  function Cancel(id) {
+        var mib = confirm("This Booking Is About to be Cancelled Are You about this as it cannot be undone?");
+        if (mib) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("CancelBooking1")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    return;
+                }
+            })
+        }
+    }
+
+    function Check(id) {
+        var mib = confirm("This Booking Is About to be Remo Are You about this as it cannot be undone?");
+        if (mib) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("CancelBooking")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    return;
+                }
+            })
+        }
+    }
+
+
+
+
+</script>
+

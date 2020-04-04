@@ -1,0 +1,71 @@
+﻿@model IEnumerable<CarRentalApp.Models.Insurance>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container">
+    <br />
+    <h2>Manage Insurance</h2>
+
+    <p>
+        <a href="@(Url.Action("Create"))" class="btn btn-outline-dark"><span class="fa fa-plus"></span> Add Insurance</a>
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    <a href="#" onclick="deleteItem('@(item.Id)')">Delete</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<script>
+     function deleteItem(id) {
+        var doDelete = confirm("Are you sure you want to remove this insurance?");
+        if (doDelete) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("Delete")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    return;
+                }
+            });
+        }
+    }
+</script>

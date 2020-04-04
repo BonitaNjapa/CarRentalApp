@@ -1,0 +1,124 @@
+﻿@model CarRentalApp.Models.BookingSummary
+
+@{
+    CarRentalApp.Models.ApplicationDbContext db = new CarRentalApp.Models.ApplicationDbContext();
+    ViewBag.Title = "Summary";
+}
+<div class="container">
+    <br />
+    <h2>Summary</h2>
+    <h3>Booking Reference <b style="color:lightgray">@(Model.Reference)</b></h3>
+    <div>
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Personal Details</h3>
+                <hr />
+                <h6>
+                    <b>First Name: </b>@(Model.FirstName)<br />
+                    <b>Surname: </b>@(Model.Surname)<br />
+                    <b>Email: </b>@(Model.Email)<br />
+                    <b>Phone Number: </b>@(Model.PhoneNumber)<br />
+                    <b>Pick up location: </b>@(Model.PickUpName)<br />
+                    <b>Drop off location: </b>@(Model.DropOffName)<br />
+                    <b>Pick up date: </b>@(Model.PickUpDate.ToLongDateString())<br />
+                    <b>Drop off date: </b>@(Model.DropOffDate.ToLongDateString())<br />
+                    <b>Pick up time: </b>@(Model.PickUpTime.ToShortTimeString())<br />
+                    <b>Drop off time: </b>@(Model.DropOffTime.ToShortTimeString())<br />
+                </h6>
+                <h3>Insurance(s)</h3>
+                <hr />
+                <h6>
+                    @foreach (var item in Model.InsuranceBookings)
+                    {
+                        @item.Name
+                    }
+                </h6>
+                <hr />
+                <h3>Extra(s)</h3>
+                <hr />
+
+                @foreach (var item in Model.ExtrasBooking)
+                {
+                    <h6>
+                        <img src="~/Images/@item.ImageUri" style="width:60px;height:60px" alt="user image" class="online" />
+                        @item.Name
+                    </h6><br />
+                }
+                <hr />
+                <h6>Total Rental Duration: @(Model.DropOffDate.Subtract(Model.PickUpDate).TotalDays) Day(s)</h6>
+                <h6>Total Amount Due:ZAR @((Model.Total.ToString()))</h6>
+                <hr />
+
+                <p>
+                    <button onclick="initialize('@Model.Id')" type="submit" class="btn btn-outline-dark">Proceed to Pay</button>
+                    <a class="btn btn-outline-danger" href="@(Url.Action("CancelBooking",new { id = Model.Id}))">Cancel booking</a>
+                </p>
+
+                <ul id="results"></ul>
+                <div class="hidden">
+                    <form action="https://secure.paygate.co.za/PayWeb3/process.trans" method="POST">
+                        <input id="PAY_REQUEST_ID" name="PAY_REQUEST_ID" type="hidden" />
+                        <input id="CHECKSUM" name="CHECKSUM" type="hidden" />
+                        <input id="REDIRECT" type="submit" />
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <h3>
+                    @(Model.RentalItems.VehicleName)
+                </h3><hr />
+                <img src="~/Images/@Model.RentalItems.ImageUrl" style="width:300px;height:300px" alt="user image" class="online" /><br />
+                @(Model.RentalItems.Seats) Seats | @(Model.RentalItems.Doors) Doors<br />
+                <b><span class="fa fa-check"></span>  Air Condition</b><br />
+                <b><span class="fa fa-check"></span>  @(Model.RentalItems.ManualOrAutomatic)</b><br />
+                Mileage: <b>@(Model.RentalItems.IsUnlimited == false ? $"{Model.RentalItems.MileagePerDay} Per km per day" : "Unlimited")</b><br />
+                Price per day: <b>ZAR @(Model.RentalItems.Rate)</b><br /><br />
+            </div>
+        </div>
+    </div>
+
+
+    <br />
+</div>
+<script type="text/javascript">
+    function initialize(id) {
+
+        let node = document.createElement("li");
+        node.innerText = "Initializing...";
+        document.querySelector("#results").appendChild(node);
+        fetch(`${window.location.protocol}//${location.host}/api/paygate?id=` + id).then(response =>
+            response.json().then(data => ({
+                data: data,
+                status: response.status
+            })
+            ).then(res => {
+                success(res.data)
+            })).catch(data => error(data));
+    }
+
+    function success(data) {
+        let requestNode = document.createElement("li");
+        requestNode.innerText = "Request retrieved";
+        document.querySelector("#results").appendChild(requestNode);
+
+        $("#PAY_REQUEST_ID").val(data.paY_REQUEST_ID);
+        $("#CHECKSUM").val(data.checksum);
+
+        let redirectNode = document.createElement("li");
+        redirectNode.innerText = "Redirecting...";
+        document.querySelector("#results").appendChild(redirectNode);
+
+        document.querySelector("#REDIRECT").click();
+    }
+
+    function error(data) {
+        let node = document.createElement("li");
+        node.innerText = data;
+        document.querySelector("#results").appendChild(node);
+    }
+</script>
+<style>
+    .hidden {
+        display: none;
+    }
+</style>

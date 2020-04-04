@@ -1,0 +1,26 @@
+﻿@model CarRentalApp.Models.RentalItems
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container">
+    <br />
+    <h3>
+        @(Model.VehicleName)
+    </h3><br />
+    <img src="~/Images/@Model.ImageUrl" style="width:300px;height:300px" alt="user image" class="online" /><br />
+    @(Model.Seats) Seats | @(Model.Doors) Doors<br />
+    <b><span class="fa fa-check"></span>  Air Condition</b><br />
+    <b><span class="fa fa-check"></span>  @(Model.ManualOrAutomatic)</b><br />
+    Mileage: <b>@(Model.IsUnlimited == false ? $"{Model.MileagePerDay} Per km per day" : "Unlimited")</b><br />
+    Price per day: <b>ZAR @(Model.Rate)</b><br /><br />
+
+    <p>
+        <a class="btn btn-outline-dark" href="@(Url.Action("Edit",new { id = Model.Id}))">Edit</a> |
+        <a class="btn btn-outline-dark" href="@(Url.Action("Index"))">Back to List</a>
+    </p>
+    <br />
+</div>
+
+

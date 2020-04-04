@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CarRentalApp.Models.Maintanance>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RentalItems.ImageUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MaintainanceDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descritpion)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <img src="~/Images/@item.RentalItems.ImageUrl" style="width:60px;height:60px" alt="user image" class="online" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MaintainanceDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descritpion)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MaintananceId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.MaintananceId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.MaintananceId })
+        </td>
+    </tr>
+}
+
+</table>

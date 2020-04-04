@@ -1,0 +1,56 @@
+﻿@model IEnumerable<CarRentalApp.Models.GroupingClass>
+
+@{
+    ViewBag.Title = "List Classes";
+}
+
+
+
+<div class="container">
+    <h2>List Groups</h2>
+    <p>
+        @Html.ActionLink("Create New", "CreateGroupingClass")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ClassId }) |
+                    @*@Html.ActionLink("Details", "Details", new { id = item.ClassId }) |*@
+                    <a href="#" onclick="deleteItem('@(item.ClassId)')">Delete</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+<script>
+     function deleteItem(id) {
+        var doDelete = confirm("Are you sure you want to remove this Class ,This Cant be Reversed?");
+        if (doDelete) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("Delete")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    return;
+                }
+            });
+        }
+    }
+</script>

@@ -1,0 +1,18 @@
+﻿@model CarRentalApp.Models.Bookings
+@{
+    ViewBag.Title = "Results";
+}
+<div class="container" style="text-align:center">
+    <br />
+    <h1>Booking #@(Model.Reference)</h1>
+    <span class="fa fa-check fa-5x text-success"></span>
+    <p>
+        Your booking was successfull, please check you email inbox for confirmation.
+        <br /><br />
+        <h4>Or</h4><br /><br />
+        <a href="@(Url.Action("Print",new { id = Model.Id}))" class="btn btn-outline-dark"><span class="fa fa-print"></span> Print Confirmation</a>
+    </p>
+    <br />
+</div>
+<br /><br /><br /><br /><br /><br /><br /><br />
+

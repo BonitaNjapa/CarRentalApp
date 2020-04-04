@@ -1,0 +1,188 @@
+﻿@model IEnumerable<CarRentalApp.Models.RentalItems>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="container">
+    <br />
+    <h2>Rentals</h2>
+
+    <p>
+        <a href="@(Url.Action("Create"))" class="btn btn-outline-dark"><span class="fa fa-plus"></span> Add Vehicle</a>
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupingClass.Name)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.CarModel.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CarModel.Manufacture.Name)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.VehicleName)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.TankCapacity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Seats)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Doors)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AirCondition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManualOrAutomatic)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.CategoryPackage.MileagePerDay)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CategoryPackage.rate)
+                </th>*@
+            @*<th>
+                    @Html.DisplayNameFor(model => model.MileagePerDay)
+                </th>*@
+            @*<th>
+                    @Html.DisplayNameFor(model => model.IsUnlimited)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Rate)
+                </th>*@
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="~/Images/@item.ImageUrl" style="width:60px;height:60px" alt="user image" class="online" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupingClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CarModel.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CarModel.Manufacture.Name)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.VehicleName)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.TankCapacity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Seats)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Doors)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AirCondition)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ManualOrAutomatic)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.CategoryPackage.MileagePerDay)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryPackage.rate)
+                    </td>*@
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.MileagePerDay)
+                    </td>*@
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.IsUnlimited)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rate)
+                    </td>*@
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    <a href="#" onclick="deleteItem('@(item.Id)')">Delete</a>
+                    @*<a href="#" onclick="deleteItem('@(item.Id)')">Delete</a>*@ |
+                    @if (item.IsBookable == false)
+                    {
+                        <a href="#" onclick="MakeItemBookable('@(item.Id)')">Bookable</a>
+                    }
+                    else if (item.IsBookable == true)
+                    {
+                        <a href="#" onclick="Maintainm('@(item.Id)')">Maintain</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    <br />
+</div>
+<script>
+    function deleteItem(id) {
+        var doDelete = confirm("Are you sure you want to remove this Car ,This Cant be Reversed?");
+        if (doDelete) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("Delete")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    return;
+                }
+            });
+        }
+    }
+     function MakeItemBookable(id) {
+        var mib = confirm("This Rental now ready for It To Be Booked ?");
+        if (mib) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("MakeBookable")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    return;
+                }
+            })
+        }
+    }
+    function Maintainm(id) {
+        var tctm = confirm("Are you sure you want to make this car to maintainance ?")
+        if (tctm) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("Maintain")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function (data) {
+                    location.reload();
+                    console.log("+++++++++++++")
+                },
+                error: function (e) {
+                    return;
+
+                }
+            })
+        }
+     }
+</script>

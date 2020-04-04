@@ -1,0 +1,155 @@
+﻿@model CarRentalApp.Models.Bookings
+
+@{
+    CarRentalApp.Models.ApplicationDbContext db = new CarRentalApp.Models.ApplicationDbContext();
+    ViewBag.Title = "Check Summary";
+}
+<div class="container">
+    <br />
+    <h2>Booking Summary</h2>
+    @if (Model.IsActive)
+    {
+        <div class="alert alert-success alert-dismissible">
+            @*<button class="çlose btn-info" data-dismiss="alert">&times;</button>*@
+
+            @Html.Label("Your Booking Has Been Completed Succesfully!")
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info alert-dismissible">
+            @*<button class="çlose btn-info" data-dismiss="alert">&times;</button>*@
+
+            @Html.Label("You Have Cancelled This Booking!")
+        </div>
+    }
+    <h3>Booking Reference <b style="color:lightgray">@(Model.Reference)</b></h3>
+
+    <div>
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Personal Details</h3>
+                <hr />
+                <h6>
+                    <b>First Name: </b>@(Model.FirstName)<br />
+                    <b>Surname: </b>@(Model.Surname)<br />
+                    <b>Email: </b>@(Model.Email)<br />
+                    <b>Phone Number: </b>@(Model.PhoneNumber)<br />
+                    @*<b>Pick up location: </b>@(db.Locations.Find(Model.BookingLocations.FirstOrDefault(m => m.PickUp).BookingId).Name)<br />
+                    <b>Drop off location: </b>@(db.Locations.Find(Model.BookingLocations.FirstOrDefault(m => !m.PickUp).BookingId).Name)<br />*@
+                    <b>Pick up date: </b>@(Model.PickUpDate.ToLongDateString())<br />
+                    <b>Drop off date: </b>@(Model.DropOffDate.ToLongDateString())<br />
+                    <b>Pick up time: </b>@(Model.PickUpTime.ToShortTimeString())<br />
+                    <b>Drop off time: </b>@(Model.DropOffTime.ToShortTimeString())<br />
+                </h6>
+                <br /><br /><br />
+                <hr />
+                <h6>Total Rental Duration: @(Model.DropOffDate.Subtract(Model.PickUpDate).TotalDays) Day(s)</h6>
+                <h6>Total Amount Due: @((Model.DropOffDate.Subtract(Model.PickUpDate).TotalDays * (double)Model.RentalItems.Rate).ToString("c"))</h6>
+                <hr />
+                <p>
+                    <button onclick="initialize('@Model.Id')" type="submit" class="btn btn-outline-dark">Proceed to Pay</button>
+                    @*<a class="btn btn-outline-danger" href="@(Url.Action("CancelBooking","Customer",new { id = Model.Id}))">Cancel booking</a>*@
+                    @if (Model.IsActive == true)
+                    {
+                        <a class="btn btn-outline-danger" href="#" onclick="cancel('@(Model.Id)')">Cancel booking</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-info" href="#">Sorry,Booking Was Cancelled.</a>
+                    }
+
+                    <a class="btn btn-outline-primary" href="@(Url.Action("Index","Customer"))">Back To List</a>
+
+
+                </p>
+
+                <ul id="results"></ul>
+                <div class="hidden">
+                    <form action="https://secure.paygate.co.za/PayWeb3/process.trans" method="POST">
+                        <input id="PAY_REQUEST_ID" name="PAY_REQUEST_ID" type="hidden" />
+                        <input id="CHECKSUM" name="CHECKSUM" type="hidden" />
+                        <input id="REDIRECT" type="submit" />
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <h3>
+                    @(Model.RentalItems.VehicleName)
+                </h3><hr />
+                <img src="~/Images/@Model.RentalItems.ImageUrl" style="width:300px;height:300px" alt="user image" class="online" /><br />
+                @(Model.RentalItems.Seats) Seats | @(Model.RentalItems.Doors) Doors<br />
+                <b><span class="fa fa-check"></span>  Air Condition</b><br />
+                <b><span class="fa fa-check"></span>  @(Model.RentalItems.ManualOrAutomatic)</b><br />
+                Mileage: <b>@(Model.RentalItems.IsUnlimited == false ? $"{Model.RentalItems.MileagePerDay} Per km per day" : "Unlimited")</b><br />
+                Price per day: <b>ZAR @(Model.RentalItems.Rate)</b><br /><br />
+            </div>
+        </div>
+    </div>
+
+
+    <br />
+</div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    function initialize(id) {
+
+        let node = document.createElement("li");
+        node.innerText = "Initializing...";
+        document.querySelector("#results").appendChild(node);
+        fetch(`${window.location.protocol}//${location.host}/api/paygate?id=` + id).then(response =>
+            response.json().then(data => ({
+                data: data,
+                status: response.status
+            })
+            ).then(res => {
+                success(res.data)
+                })).catch(data => error(data));
+    }
+
+    function success(data) {
+        let requestNode = document.createElement("li");
+        requestNode.innerText = "Request retrieved";
+        document.querySelector("#results").appendChild(requestNode);
+
+        $("#PAY_REQUEST_ID").val(data.paY_REQUEST_ID);
+        $("#CHECKSUM").val(data.checksum);
+
+        let redirectNode = document.createElement("li");
+        redirectNode.innerText = "Redirecting...";
+        document.querySelector("#results").appendChild(redirectNode);
+
+        document.querySelector("#REDIRECT").click();
+    }
+
+    function error(data) {
+        let node = document.createElement("li");
+        node.innerText = data;
+        document.querySelector("#results").appendChild(node);
+    }
+    function cancel(id) {
+        var tctm = confirm("Are you sure you want to cancel this booking ?")
+        if (tctm) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("CancelBooking")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function (data) {
+                    location.reload();
+                    console.log("I got here!!!");
+                },
+                error: function (e) {
+
+                    return;
+                }
+            })
+        }
+    }
+</script>
+<style>
+    .hidden {
+        display: none;
+    }
+</style>

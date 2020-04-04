@@ -1,0 +1,49 @@
+﻿@model IEnumerable<CarRentalApp.Models.Damages>
+@{
+    ViewBag.Title = "Damages";
+}
+
+<div class="container">
+    <br />
+    <div class="row">
+        @Html.Hidden("id")
+        <div class="col-sm-4">
+            @if (ViewBag.VehicleModel != null)
+            {
+                @Html.Partial("_VehicleDetails", (CarRentalApp.Models.RentalItems)ViewBag.VehicleModel)
+            }
+        </div>
+        @using (Html.BeginForm("Damages", "Customer", FormMethod.Post))
+        {
+            <div>
+                <h3>Add Damaged Part</h3><br />
+                <table class="table">
+                    @Html.Hidden("id")
+                    <tr>
+                        <th>
+                            @Html.Label("Description", new { id = "LabelDes" })
+                        </th>
+                        <th>
+                            @Html.Label("Damage Cost", new { id = "Labeldamage" })
+                        </th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.TextBox("Description", "", new { @class = "form-control" })
+                        </td>
+                        <td>
+                            @Html.TextBox("damageCost", "", new { @class = "form-control" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <input type="submit" value="Add" class="btn btn-outline-primary" />
+            </div>
+            
+        }
+    </div>
+
+
+</div>

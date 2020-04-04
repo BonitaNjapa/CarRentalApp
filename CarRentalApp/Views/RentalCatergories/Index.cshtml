@@ -1,0 +1,63 @@
+﻿@model IEnumerable<CarRentalApp.Models.RentalCatergory>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="container">
+    <br />
+    <h2>Vehicle Categories</h2>
+    <p>
+        <a href="@(Url.Action("Create"))" class="btn btn-outline-dark"><span class="fa fa-plus"></span> Add Category</a>
+    </p>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible">
+            <button class="çlose" data-dismiss="alert">&times;</button>
+            @(TempData["Success"])
+        </div>
+    }
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    <a href="#" onclick="deleteItem('@(item.Id)')">Delete</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br />
+</div>
+
+<script>
+     function deleteItem(id) {
+        var doDelete = confirm("Are you sure you want to remove this category?");
+        if (doDelete) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("Delete")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    return;
+                }
+            });
+        }
+    }
+</script>

@@ -1,0 +1,79 @@
+﻿@model IEnumerable<CarRentalApp.Models.CarModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="container">
+    <h2>Index</h2>
+    <p>
+        <br />
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Manufacture.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.CarModelCount)
+            </th>*@
+            @*<th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.variant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MileagePerDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsUnlimited)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Manufacture.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.CarModelCount)
+                </td>*@
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.ImageUrl)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.variant)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MileagePerDay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsUnlimited)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.CarModelId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.CarModelId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.CarModelId })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

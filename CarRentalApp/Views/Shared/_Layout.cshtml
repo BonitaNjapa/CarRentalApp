@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.timepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/fontawesome-all.css" rel="stylesheet" />
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <style>
+        .btn-outline-dark {
+            background-color: white;
+            color: #208DD0;
+            border-color: #208DD0;
+        }
+
+            .btn-outline-dark:hover {
+                background-color: #208DD0;
+                color: white;
+                border-color: #208DD0;
+            }
+
+        .btn-outline-light {
+            background-color: #208DD0;
+            color: white;
+            border-color: white;
+        }
+
+            .btn-outline-light:hover {
+                background-color: white;
+                color: #208DD0;
+                border-color: white;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color:#208DD0;box-shadow: 2px 4px 8px rgba(0,0,0,.4);">
+            <div class="container">
+                <a class="navbar-brand" href="/" style="font-family:Constantia"> Suzuka Car Rentals</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Clerk"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/rental-bookings">Bookings<span class="sr-only"></span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/rentals">Rentals<span class="sr-only"></span></a>
+                            </li>
+
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    User Management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="nav-link" style="color:black" href="/roles">Manage Roles</a>
+                                    <a class="nav-link" style="color:black" href="/employees">Manage Employees</a>
+                                   
+                                </div>
+                            </li>
+
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Adminstration
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="nav-link" style="color:black" href="/rentals-categories">Rental Categories</a>
+                                    <a class="nav-link" style="color:black" href="/extras">Manage Extras</a>
+                                    <a class="nav-link" style="color:black" href="/branches">Manage Branches</a>
+                                    <a class="nav-link" style="color:black" href="/insurance">Insurance</a>
+                                    <a class="nav-link" style="color:black" href="@Url.Action("Index","Maintanances")">Maintainances</a>
+
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Vehicle Features
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a href="@(Url.Action("CreateGroupingClass","GroupingClass"))" class="dropdown-item">Vehicle Groups</a>
+                                    <a class="nav-link" style="color:black" href="/manufactures">Manufacture</a>
+                                    <a class="nav-link" style="color:black" href="/CarModels">Car Models</a>
+                                </div>
+                            </li>
+
+
+                            @*<li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Model</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a href="@Url.Action("Index","CarModels")" class="dropdown-item">Manage</a>
+                                    <a href="@(Url.Action("Create","CarModels",new { }))" class="dropdown-item">Add New</a>
+                                </div>
+                            </li>*@
+                            @*<li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a href="/rentals-categories" class="dropdown-item">Manage</a>
+                                    <a href="@(Url.Action("Create","Rentalcatergories",new { }))" class="dropdown-item">Add New</a>
+                                </div>
+                            </li>*@
+                            <li class="nav-item">
+                                <a href="@(Url.Action("Stats","Customer"))" class="nav-link">Stats</a>
+                            </li>
+                            @*<li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Branch</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a href="@Url.Action("Index","Locations")" class="dropdown-item">Manage</a>
+                                    <a href="@(Url.Action("Create","Locations",new { }))" class="dropdown-item">Add New</a>
+                                </div>
+                            </li>*@
+                            @*<li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Grouping</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a href="@Url.Action("ListClasses","GroupingClass")" class="dropdown-item">Manage</a>
+                                    <a href="@(Url.Action("CreateGroupingClass","GroupingClass",new { }))" class="dropdown-item">Add New</a>
+                                </div>
+                            </li>*@
+                            @*<li class="nav-item">
+                <a class="nav-link" href="/roles">Manage Roles<span class="sr-only"></span></a>
+            </li>*@
+                            @*<li class="nav-item">
+                <a class="nav-link" href="/employees">Manage Employees<span class="sr-only"></span></a>
+            </li>*@
+                            @*<li class="nav-item">
+                <a class="nav-link" href="/rentals-categories">Rental Categories<span class="sr-only"></span></a>
+            </li>*@
+                        }
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/customer-rentals">Rent<span class="sr-only"></span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/rental-bookings">Rentals<span class="sr-only"></span></a>
+                            </li>
+                        }
+
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div>
+        @RenderBody()
+    </div>
+
+    <footer class="page-footer font-small cyan darken-3" style="background-color:#208DD0;">
+
+        <!-- Footer Elements -->
+        <div class="container">
+            <!-- Grid row-->
+            <div class="row">
+                <!-- Grid column -->
+                <div class="col-md-12 py-5">
+                    <div class="mb-5 text-center">
+                        <!-- Facebook -->
+                        <a href="#" class="fb-ic">
+                            <i class="fa fa-facebook-f fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                        </a>
+                        <!-- Twitter -->
+                        <a href="#" class="tw-ic">
+                            <i class="fa fa-twitter fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                        </a>
+                        <!-- Google +-->
+                        <a href="#" class="gplus-ic">
+                            <i class="fa fa-google-plus fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                        </a>
+                        <!--Linkedin -->
+                        <a href="#" class="li-ic">
+                            <i class="fa fa-linkedin fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                        </a>
+                        <!--Instagram-->
+                        <a href="#" class="ins-ic">
+                            <i class="fa fa-instagram fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Grid column -->
+            </div>
+            <!-- Grid row-->
+
+        </div>
+        <!-- Footer Elements -->
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3" style="verflow: hidden;background-color: rgba(0,0,0,.2);color: rgba(255,255,255,.6);">
+            © @(DateTime.Today.Year) Copyright
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        $('.carousel').carousel()
+    </script>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/Scripts/jquery.timepicker.js"></script>
+    <script>
+        $(".datepicker").datepicker({ minDate: 0 });
+        $(".datepickerReturn").datepicker({ minDate: 1 });
+
+        $('.timepicker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 30,
+            minTime: '10',
+            maxTime: '11:00pm',
+            defaultTime: '11',
+            startTime: '09:00',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true
+        });
+    </script>
+</body>
+</html>

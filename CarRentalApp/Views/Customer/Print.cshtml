@@ -1,0 +1,155 @@
+﻿@model CarRentalApp.Models.Bookings
+
+@{
+    CarRentalApp.Models.ApplicationDbContext db = new CarRentalApp.Models.ApplicationDbContext();
+    ViewBag.Title = "Summary";
+}
+<style>
+    @@media print {
+        #btnPrint {
+            display: none;
+        }
+
+        #footer {
+            display: none;
+        }
+
+        #KmReading1 {
+            display: none;
+        }
+
+        #bonita {
+            display: none;
+        }
+
+        #home {
+            display: none;
+        }
+        #kmread {
+            display: none
+        }
+    }
+</style>
+<div class="container">
+    <br />
+
+    <h2>Suzuka Car Release Form </h2>
+    <h5>Booking Reference <b style="color:lightgray">@(Model.Reference)</b></h5>
+    <div>
+        <div class="row">
+            <div class="col-sm-6">
+
+                <h5>Personal Details</h5>
+                <hr />
+                <h6>
+                    <b>First Name: </b>@(Model.FirstName)<br />
+                    <b>Surname: </b>@(Model.Surname)<br />
+                    <b>Email: </b>@(Model.Email)<br />
+                    <b>Phone Number: </b>@(Model.PhoneNumber)<br />
+                    <b>Pick up location: </b>@(db.Locations.Find(Model.BookingLocations.FirstOrDefault(m => m.PickUp).LocationId).Name)<br />
+                    <b>Drop off location: </b>@(db.Locations.Find(Model.BookingLocations.FirstOrDefault(m => !m.PickUp).LocationId).Name)<br />
+                    <b>Pick up date: </b>@(Model.PickUpDate.ToLongDateString())<br />
+                    <b>Drop off date: </b>@(Model.DropOffDate.ToLongDateString())<br />
+                    <b>Pick up time: </b>@(Model.PickUpTime.ToShortTimeString())<br />
+                    <b>Drop off time: </b>@(Model.DropOffTime.ToShortTimeString())<br />
+                    <b>After Km Reading :</b> @Html.DisplayFor(mmodel => mmodel.AddKmReadingAfter)<br />
+                    <b>Before Km Reading :</b> @Html.DisplayFor(mmodel => mmodel.KmReading1)<br /><br />
+                    <b> @Html.Label("This Car Was Released By Employee:")@User.Identity.Name<br /></b>
+                </h6>
+                <br />
+                @if (Model.IsCheckedOut == false)
+                {
+                    @Html.Label("This Car Was Released By Employee:")@User.Identity.Name<br />
+                    using (Html.BeginForm("AddKmReading", "Customer", FormMethod.Post, new { Id = Model.Id }))
+                        {
+
+                            <span>
+                                @Html.HiddenFor(modelll => modelll.Id)
+                                @Html.Label("With A Reading Of") @Html.EditorFor(model => model.KmReading1, new { htmlAttributes = new { @class = "form-control", @style = "max-width:100%" } })
+                                &nbsp;KM <input type="submit" id="bonita" value="Add" onclick="window.print();" />
+                            </span>
+                        }
+                    @*@Html.Label("With A Reading Of")  @Html.TextBox("kmread", new { htmlAttributes = new { @class = "form-control", @style = "max-width:100%" } });
+                    <input id="bonita" value="Add" onclick="AddKmItem('@(Model.Id)'))" />*@
+                }
+
+
+                else if (Model.IsCheckedOut == true)
+                {
+                    using (Html.BeginForm("AddKmReadingAfter", "Customer", FormMethod.Post, new { Id = Model.Id }))
+                        {
+
+                            <span>
+
+                                @Html.HiddenFor(modelll => modelll.Id)
+                                @Html.Label("Returned With A Reading Of") @Html.EditorFor(model => model.AddKmReadingAfter, new { htmlAttributes = new { @class = "form-control", @style = "max-width:100%" } })
+                                &nbsp;KM <input type="submit" id="bonita" value="Add" onclick="window.print();" />
+                            </span>
+                        }
+                    @*@Html.Label("Returned With A Reading Of")  @Html.TextBox("kmread", "", new { htmlAttributes = new { @class = "form-control", @style = "max-width:100%" } });
+                    <input type="button" id="bonita" value="Add" onclick="AddKmReadingAfterItem('@(Model.Id)'))" />*@
+
+                 
+                }
+                <br />
+                <br />
+                <hr />
+                <h6>Total Rental Duration: @(Model.DropOffDate.Subtract(Model.PickUpDate).TotalDays) Day(s)</h6>
+                <h6>Total Amount Due: @((Model.DropOffDate.Subtract(Model.PickUpDate).TotalDays * (double)Model.RentalItems.Rate).ToString("c"))</h6>
+                <hr />
+                <button id="btnPrint" onclick="window.print();" class="btn btn-outline-dark">Print <span class="fa fa-print"></span></button>&nbsp;&nbsp;<a id="home" class="btn btn-outline-dark" href="@Url.Action("Index","Home")">Go to home</a>
+            </div>
+            <div class="col-sm-6">
+                <h5>
+                    @(Model.RentalItems.VehicleName)
+                </h5><hr />
+                <img src="~/Images/@Model.RentalItems.ImageUrl" style="width:300px;height:300px" alt="user image" class="online" /><br />
+                @(Model.RentalItems.Seats) Seats | @(Model.RentalItems.Doors) Doors<br />
+                <b><span class="fa fa-check"></span>  Air Condition</b><br />
+                <b><span class="fa fa-check"></span>  @(Model.RentalItems.ManualOrAutomatic)</b><br />
+                Mileage: <b>@(Model.RentalItems.IsUnlimited == false ? $"{Model.RentalItems.MileagePerDay} Per km per day" : "Unlimited")</b><br />
+                Price per day: <b>ZAR @(Model.RentalItems.Rate)</b><br /><br />
+            </div>
+        </div>
+    </div>
+
+
+    <br />
+</div>
+<script>
+
+    function AddKmItem(id) {
+        var kmread = $("#kmread").value;
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("AddKmReading")?id=" + id + "Reading=" + kmread,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    window.print();
+                    alert("Km Added Succesfully");
+                },
+                error: function (e) {
+                    return;
+                }
+        });
+         function AddKmReadingAfterItem(id) {
+        var kmread = $("#kmread").value;
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("AddKmReadingAfter")?id=" + id + "Reading=" + kmread,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    alert("Km Added Succesfully");
+                    window.print();
+                },
+                error: function (e) {
+                    return;
+                }
+            });
+
+    }
+</script>

@@ -1,0 +1,42 @@
+﻿@model CarRentalApp.Models.Maintanance
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Maintanance</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RentalItems.ImageUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RentalItems.ImageUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaintainanceDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaintainanceDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descritpion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descritpion)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MaintananceId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

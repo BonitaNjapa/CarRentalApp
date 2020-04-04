@@ -1,0 +1,99 @@
+﻿@model IEnumerable<CarRentalApp.Repository.ViewModels.EmployeeViewModel>
+
+@{
+    ViewBag.Title = "EmployeesIndex";
+}
+<div class="container">
+    <br />
+    <h2>Manage Employees</h2>
+
+    <p>
+        <a href="@(Url.Action("AddEmployees"))" class="btn btn-outline-dark"><span class="fa fa-plus"></span> Add Employee</a>
+    </p>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible">
+            <button class="çlose" data-dismiss="alert">&times;</button>
+            @(TempData["Success"])
+        </div>
+    }
+        <table class="table">
+            @if (Model.Count() > 0)
+            {
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Contact)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Role)
+                    </th>
+                    <th></th>
+                </tr>
+
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Contact)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Role)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "UpdateEmployee", new { id = item.UserId }) |
+                            <a href="#" onclick="deleteItem('@(item.UserId)')">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="2">
+                        <h1>No Employee's Available!</h1>
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    <br />
+</div>
+<script>
+     function deleteItem(id) {
+        var doDelete = confirm("Are you sure you want to remove this employee?");
+        if (doDelete) {
+            $.ajax({
+                type: "Get",
+                url: "@Url.Action("Delete")?id=" + id,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (e) {
+                    return;
+                }
+            });
+        }
+    }
+</script>
